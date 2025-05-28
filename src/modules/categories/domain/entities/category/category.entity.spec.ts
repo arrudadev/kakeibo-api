@@ -43,6 +43,26 @@ describe('Category Entity', () => {
     expect(category.name).toBe('Category 2')
   })
 
+  it('should not be able to change the name to an empty string', () => {
+    const category = Category.create({ name: 'Category 1' })
+
+    expect(() => category.changeName('')).toThrow(DomainException)
+  })
+
+  it('should not be able to change the name to the same value', () => {
+    const initialTime = new Date(2020, 0, 1, 0, 0, 0)
+    jest.setSystemTime(initialTime)
+
+    const category = Category.create({ name: 'Category 1' })
+
+    jest.advanceTimersByTime(5_000)
+
+    category.changeName('Category 1')
+
+    expect(category.updatedAt).toEqual(initialTime)
+    expect(category.name).toBe('Category 1')
+  })
+
   it('should update the updatedAt timestamp when the name is changed', () => {
     const initialTime = new Date(2020, 0, 1, 0, 0, 0)
     jest.setSystemTime(initialTime)

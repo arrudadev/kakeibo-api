@@ -7,16 +7,17 @@ export interface IEntity {
 }
 
 export abstract class Entity<Props> {
-  protected readonly _id: string
-  protected readonly _createdAt: Date
+  public readonly id: string
+  public readonly createdAt: Date
   protected _updatedAt: Date
   protected props: Props
+  protected errors: Record<string, { message: string }> = {}
 
   protected constructor(
     props: Props & { id?: string; createdAt?: Date; updatedAt?: Date },
   ) {
-    this._id = props.id ?? randomUUID()
-    this._createdAt = props.createdAt ?? new Date()
+    this.id = props.id ?? randomUUID()
+    this.createdAt = props.createdAt ?? new Date()
     this._updatedAt = props.updatedAt ?? new Date()
     this.props = props
     this.validate()
@@ -26,14 +27,6 @@ export abstract class Entity<Props> {
 
   protected updateTimestamp() {
     this._updatedAt = new Date()
-  }
-
-  get id() {
-    return this._id
-  }
-
-  get createdAt() {
-    return this._createdAt
   }
 
   get updatedAt() {
